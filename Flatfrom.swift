@@ -37,11 +37,11 @@ class Flatfrom:SKNode {
         }
         
         physicsBody = SKPhysicsBody(rectangleOfSize:CGSizeMake(width, 10),center:CGPoint(x: width / 2, y: 0))
-        physicsBody.categoryBitMask = PhysicsContactType.platfrom;
-        physicsBody.fieldBitMask = PhysicsContactType.scene | PhysicsContactType.platfrom;
-        physicsBody.dynamic = false;
-        physicsBody.allowsRotation = false;
-        physicsBody.restitution = 0;
+        physicsBody!.categoryBitMask = PhysicsContactType.platfrom;
+        physicsBody!.fieldBitMask = PhysicsContactType.scene | PhysicsContactType.platfrom;
+        physicsBody!.dynamic = false;
+        physicsBody!.allowsRotation = false;
+        physicsBody!.restitution = 0;
     }
     
     func triggerTrap() ->Void {

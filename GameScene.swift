@@ -25,6 +25,8 @@ class GameScene: SKScene,ProtocolManScene,SKPhysicsContactDelegate {
     lazy var scoreLab = SKLabelNode(fontNamed:"Chalkduster")
     //苹果数量显示
     lazy var appLab = SKLabelNode(fontNamed:"Chalkduster")
+    //苹果工厂
+    lazy var appleFactory:AppleFactory = AppleFactory();
     
     var appleNum = 0                        //吃的苹果数量
     var lastDis     :CGFloat = 0.0;         //最后平台在场景中是位置，用于验证新平台的创建
@@ -52,11 +54,14 @@ class GameScene: SKScene,ProtocolManScene,SKPhysicsContactDelegate {
         flatfrom_factory.delegation = self;
         flatfrom_factory.sceneWidth = frame.size.width;
         
+        addChild(appleFactory);
+        appleFactory.onInit(frame.size.width, y: frame.size.height);
+        
         physicsWorld.contactDelegate = self;
-        physicsWorld.gravity = CGVector(0,-5);
+        physicsWorld.gravity = CGVector(dx: 0,dy: -5);
         physicsBody = SKPhysicsBody(edgeLoopFromRect: self.frame);
-        physicsBody.categoryBitMask = PhysicsContactType.scene;
-        physicsBody.dynamic = false;
+        physicsBody?.categoryBitMask = PhysicsContactType.scene;
+        physicsBody?.dynamic = false;
         
         sound.playBackground();
         skView = view;
@@ -126,7 +131,7 @@ class GameScene: SKScene,ProtocolManScene,SKPhysicsContactDelegate {
             jumpStart = huanghuang.position.y;
             //如果当前的位置小于200的时候，复位位子
             if huanghuang.position.x < PANDNA_PS {
-                huanghuang.physicsBody.velocity = CGVector(PANDNA_PS,0);
+                huanghuang.physicsBody!.velocity = CGVector(dx: PANDNA_PS,dy: 0);
             }
         }
     }
@@ -150,7 +155,7 @@ class GameScene: SKScene,ProtocolManScene,SKPhysicsContactDelegate {
         addChild(jeSprite!);
         jeSprite!.removeAllActions();
         jeSprite!.position = CGPoint(x: huanghuang.position.x,y: huanghuang.position.y + 3);
-        jeSprite!.runAction(SKAction.animateWithTextures(huanghuang.textureAtlas[Status.jump2], timePerFrame: 1 / 16), completion: { () -> Void in
+        jeSprite!.runAction(SKAction.animateWithTextures(huanghuang.textureAtlas[Status.jump2]!, timePerFrame: 1 / 16), completion: { () -> Void in
             self.jeSprite!.removeFromParent();
         })
     }
@@ -170,6 +175,9 @@ class GameScene: SKScene,ProtocolManScene,SKPhysicsContactDelegate {
         flatfrom_factory.destorytrashy();
         
         bg.move(moveSpeed / 5)
+        
+        appleFactory.move(moveSpeed)
+        
         /* Called before each frame is rendered */
     }
     
